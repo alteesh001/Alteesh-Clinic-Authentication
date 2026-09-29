@@ -1,6 +1,6 @@
-# [Project name]
+# Alteesh Clinic
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Alteesh Clinic is an Arabic-first clinic workspace with branded authentication, first-admin onboarding, and a protected role-aware portal for medical teams.
 
 ## Run & Operate
 
@@ -22,23 +22,35 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/alteesh-clinic` — React/Vite web app and clinic-facing UI.
+- `artifacts/api-server/src/routes/auth.ts` — auth status, current profile, and first-admin onboarding routes.
+- `lib/api-spec/openapi.yaml` — source of truth for API contracts and generated hooks.
+- `lib/db/src/schema/clinic-users.ts` — clinic user profile schema.
+- `artifacts/alteesh-clinic/src/App.tsx` — Clerk routing, public landing page, onboarding, and protected portal.
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Clerk is the authentication provider; browser requests use Clerk's same-origin session cookie rather than manually attaching bearer tokens.
+- The first signed-in user creates the clinic owner profile through the onboarding endpoint and receives the `super_admin` role.
+- API contracts are OpenAPI-first; regenerate clients with `pnpm --filter @workspace/api-spec run codegen` after spec changes.
+- The UI is bilingual and Arabic-first in product copy while keeping common workspace controls in English for the initial build.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Public clinic welcome page with sign-in and sign-up entry points.
+- Clerk-powered sign-in and sign-up screens with branded appearance and localization.
+- First-admin onboarding that creates the clinic profile and protects the portal until setup is complete.
+- Protected portal shell with role labels, clinic overview, appointment preview, quick actions, and sign-out.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Preserve the Alteesh Clinic visual direction while building the medical-management functionality from the referenced source system.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Keep Clerk routes exactly `/sign-in/*?` and `/sign-up/*?`; Clerk needs full base-prefixed `path` props.
+- Mount the Clerk proxy before Express body parsers and keep `clerkMiddleware` before API routes.
+- Restart `artifacts/api-server: API Server` after backend bundle changes; Vite frontend changes hot reload.
 
 ## Pointers
 

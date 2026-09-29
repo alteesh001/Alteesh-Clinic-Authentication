@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Alteesh Clinic"
+description = "A bilingual clinic management web app with branded sign-in, first-admin onboarding, role-aware access, and a calm medical workspace for clinic staff."
+version = "1.0.0"
+id = "artifacts/alteesh-clinic"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21610
+
+[services.development]
+run = "pnpm --filter @workspace/alteesh-clinic run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/alteesh-clinic", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/alteesh-clinic/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21610"
+BASE_PATH = "/"
